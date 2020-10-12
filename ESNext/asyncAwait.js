@@ -23,20 +23,15 @@ const getTurma = letra => {
     })
 }
 
-let nomes = []
-getTurma('A').then(alunos => {
-    nomes = nomes.concat(alunos.map(a => `A: ${a.nome}`))
-    getTurma('B').then(alunos => {
-        nomes = nomes.concat(alunos.map(a => `B: ${a.nome}`))
-        getTurma('C').then(alunos => {
-            nomes = nomes.concat(alunos.map(a => `C: ${a.nome}`))
-            console.log(nomes)
-        })
-    })
-})
+// Recurso do ES8
+// Objetivo de simplificar o uso de promises...
+let obterAlunos = async () => {
+    const ta = await getTurma('A')
+    const tb = await getTurma('B')
+    const tc = await getTurma('C')
+    return [].concat(ta, tb, tc)
+} // retorna um objeto AsyncFunction
 
-Promise.all([getTurma('A'), getTurma('B'), getTurma('C')])
-    .then(turmas => [].concat(...turmas))
-    .then(alunos => alunos.map(aluno => aluno.nome))
+obterAlunos()
+    .then(alunos => alunos.map(a => a.nome))
     .then(nomes => console.log(nomes))
-    .cath(e => console.log(e))
